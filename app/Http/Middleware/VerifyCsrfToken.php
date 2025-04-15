@@ -37,5 +37,6 @@ class VerifyCsrfToken extends Middleware
     '/vendor/property-management/featured/razorpay/notify',
     '/vendor/property-management/featured/mercadopago/notify',
     '*/vendor/property-management/featured/paytm/notify*',
+    'api/*'
   ];
 }

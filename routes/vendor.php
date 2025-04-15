@@ -77,8 +77,8 @@ Route::prefix('vendor')->middleware('auth:vendor', 'Deactive')->group(function (
     Route::get('/mollie/success', 'Payment\MollieController@successPayment')->name('membership.mollie.success');
     Route::post('mollie/cancel', 'Payment\MollieController@cancelPayment')->name('membership.mollie.cancel');
     Route::get('anet/cancel', 'Payment\AuthorizeController@cancelPayment')->name('membership.anet.cancel');
-    Route::get('/offline/success', 'Front\CheckoutController@offlineSuccess')->name('membership.offline.success');
-    Route::get('/trial/success', 'Front\CheckoutController@trialSuccess')->name('membership.trial.success');
+    // Route::get('/offline/success', 'Front\CheckoutController@offlineSuccess')->name('membership.offline.success');
+    // Route::get('/trial/success', 'Front\CheckoutController@trialSuccess')->name('membership.trial.success');
 
     Route::get('/online/success', 'Vendor\VendorCheckoutController@onlineSuccess')->name('success.page');
   });
