@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Common\HomePageController;
+use App\Http\Controllers\Api\Common\PropertyController;
 
 
 /*
@@ -29,6 +30,11 @@ Route::prefix('v1/home/')->group(function () {
   Route::get('properties/{type}/{value}/{limit}', [HomePageController::class, 'propertiesData']);
 });
 
+Route::prefix('v1/properties/')->group(function () {
+  Route::get('get/filter-data', [PropertyController::class, 'getFilterData']);
+  Route::get('get-properties', [PropertyController::class, 'propertySearch']);
+  Route::get('properties-details/{id}', [PropertyController::class, 'propertydetails']);
+});
 
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

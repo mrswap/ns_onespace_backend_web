@@ -42,7 +42,11 @@ $version = $basicInfo->theme_version;
                 <div class="col-xl-5">
                     <div class="sign-form-wrapper text-center">
                         <h4 class="title mb-30">Welcome again</h4>
-
+                        @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                        @endif
                         <form id="sendOtpForm">
                             <div class="form-group">
                                 <!-- <label for="phone">Phone Number</label> -->
@@ -67,7 +71,7 @@ $version = $basicInfo->theme_version;
                                 <input type="text" class="form-control" id="otp" name="otp" placeholder="Enter OTP"
                                     required>
                             </div>
-                            
+                            <br>
                             <div class="col-xl-12">
                                 <div class="agent-details-btn">
                                     <button class="bd-btn btn-style btn-hover-x w-100 btn-black" type="submit">Verify
@@ -149,7 +153,7 @@ $version = $basicInfo->theme_version;
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-// $(document).ready(function() {
+    // $(document).ready(function() {
     $('#sendOtpForm').submit(function(e) {
         e.preventDefault();
         $.ajax({
@@ -161,12 +165,11 @@ $version = $basicInfo->theme_version;
             },
             success: function(response) {
                 console.log(response);
-                if(response.success){
+                if (response.success) {
                     alert(response.success);
                     $('#sendOtpForm').hide();
                     $('#verifyOtpForm').show();
-                }
-                else{
+                } else {
                     alert(response.error);
                 }
             },
@@ -188,20 +191,21 @@ $version = $basicInfo->theme_version;
                 _token: "{{ csrf_token() }}"
             },
             success: function(response) {
-                if(response.success){
+                console.log(response);
+
+                if (response.success) {
                     alert(response.success);
-                    location.reload("/user/dashboard"); // Redirect to a new page or reload
-                }
-                else{
+                    window.location.href = "{{ route('user.dashboard') }}"; // Proper redirect
+                } else {
                     alert(response.error);
                 }
-              
+
             },
             error: function(xhr) {
                 alert(xhr.responseJSON.error);
             }
         });
     });
-// });
+    // });
 </script>
 @endsection

@@ -34,6 +34,20 @@ $version = $basicInfo->theme_version;
         <!-- app body content start -->
         <div class="app-content-wrapper">
             <div class="row">
+               <div class="container">
+               @php
+                   $user = Auth::guard()->user();
+                   $incompleteProfile =  (in_array($user->name, [null, '', 'User']) || is_null($user->username));
+                   @endphp
+                   @if($incompleteProfile)
+                   <div class="alert alert-warning mt-2 mb-0 py-1 px-3 rounded small" style="display: inline-block;">
+                       🔔 Please complete your profile and set a password.
+                       <a href="{{ route('user.edit_profile') }}" class="text-decoration-underline text-primary ms-2">Edit Profile</a>
+                   </div>
+                 @endif
+               </div>
+            </div>
+            <div class="row">
                 <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6 col-sm-12">
                     <div class="card-wrapper">
                         <div class="card-body">

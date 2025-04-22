@@ -235,12 +235,12 @@ class PropertyController extends Controller
                     ->where('memberships.start_date', '<=', Carbon::now()->format('Y-m-d'))
                     ->where('memberships.expire_date', '>=', Carbon::now()->format('Y-m-d'));
             })
-            ->where(function ($query) {
-                $query->where('properties.vendor_id', '=', 0)
-                    ->orWhere(function ($query) {
-                        $query->where('vendors.status', '=', 1)->whereNotNull('memberships.id');
-                    });
-            })
+            // ->where(function ($query) {
+            //     $query->where('properties.vendor_id', '=', 0)
+            //         ->orWhere(function ($query) {
+            //             $query->where('vendors.status', '=', 1)->whereNotNull('memberships.id');
+            //         });
+            // })
 
             ->when($type, function ($query) use ($type) {
                 return $query->where('properties.type', $type);

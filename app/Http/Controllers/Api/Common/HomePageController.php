@@ -86,7 +86,7 @@ class HomePageController extends Controller
             'data' => $data
         ]);
     }
-    public function propertiesData(Request $request, $type, $value,$limit)
+    public function propertiesData(Request $request, $type, $value, $limit)
     {
 
         $properties = Property::where([['status', 1], ['approve_status', 1]])

@@ -22,6 +22,31 @@ $version = $basicInfo->theme_version;
                     </div>
                     <form id="carForm" action="{{ route('user.updateprofile') }}" method="post" enctype="multipart/form-data">
                         @csrf
+                        @if (session('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        @endif
+
+                        @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        @endif
+
+                        @if ($errors->any())
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        @endif
+
                         <div class="row gy-20">
                             <div class="col-md-12">
                                 <div class="form-input-title mb-20">
@@ -30,28 +55,30 @@ $version = $basicInfo->theme_version;
                                 <div class="agent-profile-thumb">
                                     <div class="agent-profile-thumb-label">
                                         <input type="file" id="imageUpload" name="image">
-                                          <input type="file" class="img-input" name="featured_image">
                                         <label for="imageUpload">
                                             <span class="label-title">Change Photo</span>
                                             <span class="agent-profile-preview">
                                                 @if ($vendor->image != null)
-
-                                                <span class="agent-profile-preview-box" id="imagePreview" style="background-image: url('{{ asset('assets/img/users/' . $vendor->image) }}');">
-                                                </span>
+                                                <span class="agent-profile-preview-box" id="imagePreview" style="background-image: url('{{ asset('assets/img/users/' . $vendor->image) }}');"></span>
                                                 @else
                                                 <img src="" alt="..." class="uploaded-img">
-                                                <span class="agent-profile-preview-box" id="imagePreview" style="background-image: url('{{ asset('assets/img/noimage.jpg') }}');">
-                                                </span>
+                                                <span class="agent-profile-preview-box" id="imagePreview" style="background-image: url('{{ asset('assets/img/noimage.jpg') }}');"></span>
                                                 @endif
-
-
                                             </span>
                                         </label>
-                                        <p id="editErr_photo" class="mt-1 mb-0 text-danger em"></p>
 
+                                        {{-- Laravel validation error --}}
+                                        @if ($errors->has('image'))
+                                        <p class="mt-1 mb-0 text-danger">{{ $errors->first('image') }}</p>
+                                        @endif
+
+                                        {{-- Optional: for JS error handling --}}
+                                        <p id="editErr_photo" class="mt-1 mb-0 text-danger em"></p>
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="col-lg-12">
                                 <div class="form-input-box">
                                     <div class="form-input-title">
@@ -88,37 +115,8 @@ $version = $basicInfo->theme_version;
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-6">
-                                <div class="form-input-box">
-                                    <div class="form-input-title">
-                                        <label for="show_email_addresss">{{ __('Show Email Address ') }}</label>
-                                    </div>
-                                    <div class="form-input">
-                                        <input type="checkbox" {{ $vendor->show_email_addresss == 1 ? 'checked' : '' }} name="show_email_addresss" class="" id="show_email_addresss">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-input-box">
-
-                                    <div class="form-input">
-                                        <input type="checkbox" {{ $vendor->show_phone_number == 1 ? 'checked' : '' }} name="show_phone_number" id="show_phone_number">
-                                        <label class="custom-control-label" for="show_phone_number">{{ __('Show Phone Number') }}</label>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-input-box">
-
-                                    <div class="form-input">
-                                        <input type="checkbox" {{ $vendor->show_contact_form == 1 ? 'checked' : '' }} name="show_contact_form" id="show_contact_form">
-                                        <label class="custom-control-label" for="show_contact_form">{{ __('Show  Contact Form') }}</label>
-                                    </div>
-                                </div>
-                            </div>
-                          <div class="col-lg-6">
                                 <div class="form-input-box">
                                     <div class="form-input-title">
                                         <label for="firstname">Name<span>*</span></label>

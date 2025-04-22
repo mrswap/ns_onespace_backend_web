@@ -224,80 +224,72 @@
                                 <li><a href="{{ route('ourprocess') }}">Sell @ 1%</a></li>
                             </ul>
                         </li>
-                        <!-- <li class="menu-item-has-children">
-                                <a href="#">Dashboard</a>
-                                <ul class="dp-menu">
-                                    <li><a href="dashboard.html">Dashboard</a></li>
-                                    <li><a href="my-property.html">My Property</a></li>
-                                    <li><a href="my-property-card.html">Property Card</a></li>
-                                    <li><a href="property-add.html">Add Property</a></li>
-                                    <li><a href="property-edit.html">Property Edit</a></li>
-                                    <li><a href="app-invoice.html">Invoices List</a></li>
-                                    <li><a href="app-invoice-preview.html">Invoices Preview</a></li>
-                                    <li><a href="favorite.html">Favorites</a></li>
-                                    <li><a href="reviews.html">Reviews</a></li>
-                                    <li><a href="profile.html">Profile</a></li>
-                                </ul>
-                            </li> -->
 
-                        {{-- <li class="menu-item-has-children">
-                            <a href="#">About Company</a>
-                            <ul class="dp-menu">
-                                <li><a href="{{ route('about_us') }}">About Us</a></li>
-                        <li><a href="{{ route('career') }}">Careers</a></li>
-                        <li><a href="{{ route('contact') }}">Contact</a></li>
+
                         <li class="menu-item-has-children">
-                            <a href="#">Dashboard</a>
-                            <ul class="dp-menu">
-                                <li><a href="dashboard.html">Dashboard</a></li>
-                                <li><a href="my-property.html">My Property</a></li>
-                                <!-- <li><a href="my-property-card.html">Property Card</a></li> -->
-                                <!-- <li><a href="property-add.html">Add Property</a></li> -->
-                                <!-- <li><a href="property-edit.html">Property Edit</a></li> -->
-                                <!-- <li><a href="app-invoice.html">Invoices List</a></li> -->
-                                <!-- <li><a href="app-invoice-preview.html">Invoices Preview</a></li> -->
-                                <li><a href="favorite.html">Favorites</a></li>
-                                <!-- <li><a href="reviews.html">Reviews</a></li> -->
-                                <li><a href="profile.html">Profile</a></li>
-                            </ul>
+                            <?php if (session('vendor_login_status') == true || session('tentant_login_status') == true): ?>
+                                <a href="#">
+                                    <?php if (session('vendor_login_status') == true): ?>
+                                        <?php echo e(Auth::guard('vendor')->user()->name); ?> 
+                                    <?php elseif (session('tenant_login_status') == true): ?>
+                                        <?php echo e(Auth::user()->name); ?> 
+                                    <?php endif; ?>
+                                </a>
+                                <ul class="dp-menu">
+                                    <li>
+                                        <?php if (session('vendor_login_status') == true): ?>
+                                            <a href="<?php echo e(route('vendor.dashboard')); ?>">Dashboard</a>
+                                        <?php elseif (session('tentant_login_status') == true): ?>
+                                            <a href="<?php echo e(route('user.dashboard')); ?>">Dashboard</a>
+                                        <?php endif; ?>
+                                    </li>
+                                    <li>
+                                        <?php if (session('vendor_login_status') == true): ?>
+                                            <a href="<?php echo e(route('vendor.logout')); ?>">Logout</a>
+                                        <?php elseif (session('tentant_login_status') == true): ?>
+                                            <a href="<?php echo e(route('user.logout')); ?>">Logout</a>
+                                        <?php endif; ?>
+                                    </li>
+                                </ul>
+                            <?php else: ?>
+                                <a href="#">Login</a>
+                                <ul class="dp-menu">
+                                    <li><a href="<?php echo e(route('user.login')); ?>">Tenant / Buyer</a></li>
+                                    <li><a href="<?php echo e(route('vendor.login')); ?>">Property Owner / Seller</a></li>
+                                </ul>
+                            <?php endif; ?>
                         </li>
-                    </ul>
-                    </li> --}}
-                    {{-- <li class="menu-item-has-children">
-                            <a href="{{ route('login') }}">Login</a>
-                    </li> --}}
-                    <li class="menu-item-has-children">
-                        <a href="#">Login</a>
-                        <ul class="dp-menu">
-                            {{-- <li><a href="{{ route('admin.dashboard') }}">Admin</a>
-                    </li> --}}
-                    <li><a href="{{ route('user.login') }}">Tenant / Buyer</a></li>
-                    <li><a href="{{ route('vendor.login') }}">Property Owner / Seller</a></li>
-                    {{-- <li><a href="{{ route('agent.login') }}">Agent Login</a>
-                    </li> --}}
 
-                    </ul>
-                    </li>
+
+
+
 
                     </ul>
                 </nav>
             </div>
             <div class="header-right style-one">
                 <div class="header-action">
-                    <div class="header-btn-wrap  d-sm-block">
-                        <?php
-                        if ($vendor_login_status === true && $vendor_id > 1) { ?>
-                            <a class="bd-half-outline-btn post-property-btn" href="{{ route('vendor.property_management.type') }}">
+                    <?php
 
-                            <?php } else { ?>
-                                <a class="bd-half-outline-btn post-property-btn" href="{{ route('postproperty') }}">
-                                <?php } ?>
-                        
-                            <div class="text d-flex align-items-center justify-content-center">Post Property <div class="property-freeTxt"> free <div class="fre__innerwrap"></div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
+                    if (session('tentant_login_status') == false) { ?>
+
+                        <div class="header-btn-wrap  d-sm-block">
+                            <?php
+                            if ($vendor_login_status === true && $vendor_id > 1) { ?>
+                                <a class="bd-half-outline-btn post-property-btn" href="{{ route('vendor.property_management.type') }}">
+
+                                <?php } else { ?>
+                                    <a class="bd-half-outline-btn post-property-btn" href="{{ route('postproperty') }}">
+                                    <?php } ?>
+
+                                    <div class="text d-flex align-items-center justify-content-center">Post Property <div class="property-freeTxt"> free <div class="fre__innerwrap"></div>
+                                        </div>
+                                    </div>
+                                    </a>
+                        </div>
+                    <?php } ?>
+
+
                     <div class="header-hamburger">
                         <div class="sidebar-toggle">
                             <button><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -263,8 +263,8 @@ class UserController extends Controller
         return;
     }
 
-    
-    
+
+
     public function verifyOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -327,7 +327,7 @@ class UserController extends Controller
         // ]);
     }
 
-   
+
     public function sendOtp(Request $request)
     {
 
@@ -369,20 +369,22 @@ class UserController extends Controller
 
         if (!$user) {
             $user = User::updateOrCreate(
-            [
-            'phone' => $request->phone,
-            'status' =>1,
-            'password' => Hash::make(123456),
-            'email'=>$request->phone."@gmail.com"
-            ]);
-            // return response()->json(['error' => 'User not found.']);
+                [
+                    'phone' => $request->phone,
+                    'status' => 1,
+                    'password' => $request->phone,
+                    'email' => $request->phone . "@gmail.com"
+                ]
+            );
         }
-        
+
         $otp = 123456;
         $phone = $request->phone;
         // $otp = rand(100000, 999999); // Generate a 6-digit OTP
         $this->sendSms($phone, "Your OTP is $otp");
         $user->otp = $otp;
+        $user->status = 1;
+        $user->name = "User";
         $user->otp_expires_at = Carbon::now()->addMinutes(10); // OTP expires in 10 minutes
         $user->save();
 
@@ -415,6 +417,6 @@ class UserController extends Controller
         // return back()->withErrors(['otp' => 'Invalid or expired OTP']);
 
         // Log in the user
-       
+
     }
 }

@@ -11,7 +11,11 @@
                            </div>
                        </a>
                    </div>
-                   <h3 class="app-header-title d-none d-sm-block">Hello {{ Auth::guard()->user()->name}} </h3>
+                   <h3 class="app-header-title d-none d-sm-block">Hello <?php if (session('vendor_login_status') == true): ?>
+                           <?php echo e(Auth::guard('vendor')->user()->name); ?>
+                       <?php elseif (session('tenant_login_status') == true): ?>
+                           <?php echo e(Auth::user()->name); ?>
+                       <?php endif; ?> </h3><br>
                </div>
                <div class="app-header-right">
                    <div class="app-header-input p-relative d-none d-xl-block">

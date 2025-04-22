@@ -228,10 +228,9 @@ class UserController extends Controller
         // get the email and password which has provided by the user
         $credentials = $request->only('username', 'password');
 
-        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' :
-        (preg_match('/^\d{10}$/', $request->username) ? 'phone' : 'username');
+        $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : (preg_match('/^\d{10}$/', $request->username) ? 'phone' : 'username');
 
-// Build the credentials array
+        // Build the credentials array
         $credentials = [
             $fieldType => $request->username,
             'password' => $request->password,
@@ -243,7 +242,7 @@ class UserController extends Controller
             $authUser = Auth::guard('web')->user();
             // dd($authUser);
             // second, check whether the user's account is active or not
-            if ($fieldType=="email" && $authUser->email_verified_at == null) {
+            if ($fieldType == "email" && $authUser->email_verified_at == null) {
                 Session::flash('error', 'Please verify your email address');
 
                 // logout auth user as condition not satisfied
@@ -505,7 +504,7 @@ class UserController extends Controller
 
         $queryResult['authUser'] = $user;
 
-        
+
 
         return back();
     }
@@ -522,6 +521,9 @@ class UserController extends Controller
 
     public function redirectToDashboard()
     {
+
+        $allSessionData = session()->all();
+
         $misc = new MiscellaneousController();
 
         $language = $misc->getLanguage();
@@ -543,6 +545,7 @@ class UserController extends Controller
         session()->put('loginType', 'user');
         $queryResult['wishlists'] = Wishlist::where('user_id', $user->id)
             ->get();
+
         // dd($queryResult);
         if ($themeVersion == 5) {
             return view('frontend.v5.user.dashboard', $queryResult);
@@ -575,72 +578,39 @@ class UserController extends Controller
 
         return view('frontend.user.edit-profile', $queryResult);
     }
-
     public function updateProfile(Request $request)
     {
-        // dd($in);
-        // $request->validate([
-        //   'name' => 'required',
-        //   'username' => [
-        //     'required',
-        //     'alpha_dash',
-        //     Rule::unique('users', 'username')->ignore(Auth::guard('web')->user()->id),
-        //   ],
-        //   'email' => [
-        //     'required',
-        //     'email',
-        //     Rule::unique('users', 'email')->ignore(Auth::guard('web')->user()->id)
-        //   ],
-        // ]);
+        $user = Auth::guard('web')->user();
 
-        $rules = [
-            'username' => [
-                'required',
-                'not_in:admin',
-                Rule::unique('users', 'username')->ignore(Auth::guard('web')->user()->id),
-            ],
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users', 'email')->ignore(Auth::guard('web')->user()->id),
-            ],
-        ];
-
+        $data = $request->only([
+            'name', 'username', 'email', 'phone',
+            'country', 'state', 'city', 'zip_code', 'address'
+        ]);
+    
         if ($request->hasFile('image')) {
-            $rules['image'] = 'mimes:png,jpeg,jpg';
-        }
-
-        // $validator = Validator::make($request->all(), $rules, []);
-        // if ($validator->fails()) {
-        //   return Response::json([
-        //     'errors' => $validator->getMessageBag()
-        //   ], 400);
-        // }
-
-        $authUser = Auth::guard('web')->user();
-        $in = $request->all();
-        // dd($in);
-        $file = $request->file('image');
-        // $file = $request->image;
-        // dd($file);
-        if ($file) {
-            $extension = $file->getClientOriginalExtension();
-            $directory = public_path('assets/img/users/');
-            $fileName = uniqid() . '.' . $extension;
-            @mkdir($directory, 0775, true);
-            $file->move($directory, $fileName);
-            $in['image'] = $fileName;
-        }
-  try {
-        $authUser->update($in);
-  } catch (\Exception $e) {
-                Session::flash('error', $e->getMessage());
-               return redirect()->back();
+            $file = $request->file('image');
+            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/img/users/'), $filename);
+    
+            // Optional: delete old image
+            if ($user->image && file_exists(public_path('assets/img/users/' . $user->image))) {
+                @unlink(public_path('assets/img/users/' . $user->image));
             }
-        Session::flash('success', 'Your profile has been updated successfully.');
-
+    
+            $data['image'] = $filename;
+        }
+       
+        try {
+            $user->update($data);
+            Session::flash('success', 'Your profile has been updated successfully.');
+        } catch (\Exception $e) {
+            Session::flash('error', 'Update failed: ' . $e->getMessage());
+        }
+    
         return redirect()->back();
     }
+    
+
 
     public function changePassword()
     {

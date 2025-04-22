@@ -17,7 +17,21 @@ class User extends Authenticatable
 
   use HasApiTokens, Notifiable;
 
-  protected $fillable = ['name', 'email', 'password','username','phone','otp','otp_expires_at'];
+  protected $fillable = [
+    'name',
+    'username',
+    'email',
+    'phone',
+    'country',
+    'state',
+    'city',
+    'zip_code',
+    'address',
+    'password',
+    'otp',
+    'otp_expires_at',
+    'image',
+  ];
   /**
    * The attributes that aren't mass assignable.
    *
@@ -64,7 +78,6 @@ class User extends Authenticatable
   }
   public function wishlists()
   {
-      return $this->hasMany(Wishlist::class, 'property_id', 'id');
+    return $this->hasMany(Wishlist::class, 'property_id', 'id');
   }
-
 }
